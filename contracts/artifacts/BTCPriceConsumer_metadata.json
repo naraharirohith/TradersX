@@ -1,0 +1,78 @@
+{
+	"compiler": {
+		"version": "0.8.25+commit.b61c2a91"
+	},
+	"language": "Solidity",
+	"output": {
+		"abi": [
+			{
+				"inputs": [],
+				"stateMutability": "nonpayable",
+				"type": "constructor"
+			},
+			{
+				"inputs": [],
+				"name": "getLatestPrice",
+				"outputs": [
+					{
+						"internalType": "int256",
+						"name": "",
+						"type": "int256"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			}
+		],
+		"devdoc": {
+			"kind": "dev",
+			"methods": {},
+			"version": 1
+		},
+		"userdoc": {
+			"kind": "user",
+			"methods": {
+				"constructor": {
+					"notice": "Network: Ethereum Mainnet Aggregator: BTC/USD Address: 0xF4030086522a5bEEa4988F8cA5B36dbC97BeE88c"
+				},
+				"getLatestPrice()": {
+					"notice": "Returns the latest price"
+				}
+			},
+			"version": 1
+		}
+	},
+	"settings": {
+		"compilationTarget": {
+			"contracts/PriceOracle.sol": "BTCPriceConsumer"
+		},
+		"evmVersion": "cancun",
+		"libraries": {},
+		"metadata": {
+			"bytecodeHash": "ipfs"
+		},
+		"optimizer": {
+			"enabled": false,
+			"runs": 200
+		},
+		"remappings": []
+	},
+	"sources": {
+		"@chainlink/contracts/src/v0.8/shared/interfaces/AggregatorV3Interface.sol": {
+			"keccak256": "0xfe4e8bb4861bb3860ba890ab91a3b818ec66e5a8f544fb608cfcb73f433472cd",
+			"license": "MIT",
+			"urls": [
+				"bzz-raw://644cff84052e1e82b5bb502b2a46e8f142a62b0db4cd9b38200798ba8373c6f7",
+				"dweb:/ipfs/QmTa99QHrJBn3SXDizquPBUiTxVCNKQrHgaWJhuds5Sce2"
+			]
+		},
+		"contracts/PriceOracle.sol": {
+			"keccak256": "0xe23c612c184acfa5a70db49f99ee7c2f3a9f74559f2a6e30a1f1c61afba1b662",
+			"urls": [
+				"bzz-raw://9b8de1a91815ecb3119e39405f52c639064fd8edbb3830ebd9503bfc32d06885",
+				"dweb:/ipfs/QmQ1HtUQDgt1XYYcGUT9FkRR5fnjJnsN1Cwb8rSk5fYHqk"
+			]
+		}
+	},
+	"version": 1
+}
