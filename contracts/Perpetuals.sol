@@ -65,22 +65,16 @@ contract PerpetualProtocol {
         Position storage position = positions[msg.sender][positionIndex];
         require(position.isOpen, "Position is not open");
         require(position.trader == msg.sender, "Not authorized to modify this position");
+        require(additionalSize > 0 , "Additional size cannot be zero");
 
-        int initialCollateralRequired = position.size * int(maxLeverage);
-        int newCollateralRequired = (position.size + additionalSize) * int(maxLeverage);
-        int additionalCollateralRequired = newCollateralRequired - initialCollateralRequired;
+        int newBorrowedValue = position.borrowedValue + (additionalSize * price.getLatestBTCPrice());
+        int newSize = position.size + additionalSize;
+        int collateralAmountInUSDC = position.collateral;
 
-        require(additionalCollateralRequired <= int(collateralToken.balanceOf(msg.sender)), "Insufficient collateral");
+        require(newSize / collateralAmountInUSDC <= int(maxLeverage), "Exceeds max leverage");
 
-        position.size += additionalSize;
-        int latestBTCPrice = price.getLatestBTCPrice();
-        position.borrowedValue += additionalSize * latestBTCPrice;
-
-        require(position.borrowedValue / position.collateral <= int(maxLeverage), "Exceeds maximum leverage");
-
-        collateralToken.transferFrom(msg.sender, address(this), uint(additionalCollateralRequired));
-        vault.deposit(uint(additionalCollateralRequired), msg.sender);
-        position.collateral += additionalCollateralRequired;
+        position.size = additionalSize;
+        position.borrowedValue = newBorrowedValue;
     }
 
     function increasePositionCollateral(uint positionIndex, int additionalCollateral) external {
@@ -90,6 +84,12 @@ contract PerpetualProtocol {
 
         require(additionalCollateral > 0, "Additional collateral must be positive");
         require(int(collateralToken.balanceOf(msg.sender)) >= additionalCollateral, "Insufficient collateral");
+    
+        int newCollateral = position.collateral + additionalCollateral;
+        int newSize = position.size;
+
+        require(newSize / newCollateral <= int(maxLeverage), "Exceeds maximum leverage");
+
 
         vault.deposit(uint(additionalCollateral), msg.sender);
         position.collateral += additionalCollateral;
@@ -127,14 +127,14 @@ contract PerpetualProtocol {
     return leverage;
 }
 
-    function calculatePnL(Position storage position) private view returns (int) {
+    function calculatePnL(Position storage position) private view returns (int, int) {
         int currentMarketValue = price.getLatestBTCPrice();
         int averagePositionPrice = position.borrowedValue;
 
         if (position.isLong) {
-            return (currentMarketValue - averagePositionPrice) * position.size;
+            return ((currentMarketValue - averagePositionPrice) * position.size, position.collateral / (currentMarketValue * position.borrowedValue));
         } else {
-            return (averagePositionPrice - currentMarketValue) * position.size;
+            return ((averagePositionPrice - currentMarketValue) * position.size, position.collateral / (currentMarketValue * position.borrowedValue));
         }
     }
 

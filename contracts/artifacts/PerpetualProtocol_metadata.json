@@ -1,6 +1,6 @@
 {
 	"compiler": {
-		"version": "0.8.25+commit.b61c2a91"
+		"version": "0.8.26+commit.8a97fa7a"
 	},
 	"language": "Solidity",
 	"output": {
@@ -61,6 +61,42 @@
 					}
 				],
 				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "uint256",
+						"name": "positionIndex",
+						"type": "uint256"
+					},
+					{
+						"internalType": "int256",
+						"name": "additionalCollateral",
+						"type": "int256"
+					}
+				],
+				"name": "increasePositionCollateral",
+				"outputs": [],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "uint256",
+						"name": "positionIndex",
+						"type": "uint256"
+					},
+					{
+						"internalType": "int256",
+						"name": "additionalSize",
+						"type": "int256"
+					}
+				],
+				"name": "increasePositionSize",
+				"outputs": [],
+				"stateMutability": "nonpayable",
 				"type": "function"
 			},
 			{
@@ -191,29 +227,6 @@
 					}
 				],
 				"stateMutability": "view",
-				"type": "function"
-			},
-			{
-				"inputs": [
-					{
-						"internalType": "uint256",
-						"name": "_positionId",
-						"type": "uint256"
-					},
-					{
-						"internalType": "int256",
-						"name": "_newSize",
-						"type": "int256"
-					},
-					{
-						"internalType": "int256",
-						"name": "_newCollateral",
-						"type": "int256"
-					}
-				],
-				"name": "updatePosition",
-				"outputs": [],
-				"stateMutability": "nonpayable",
 				"type": "function"
 			},
 			{
@@ -354,11 +367,11 @@
 			]
 		},
 		"contracts/Perpetuals.sol": {
-			"keccak256": "0x847837e3194798773bfb2cdd04ef36aa83a35c633eb6d0bf48762a3881bde5e5",
+			"keccak256": "0x7b005e452bb38702fe8628dad9cb56e533354dab9be945ecd325ad60627cdaeb",
 			"license": "MIT",
 			"urls": [
-				"bzz-raw://18d027513cbe0cea76dbde201e24e205ba8b752dcc34cd545c8c0d21f371d95d",
-				"dweb:/ipfs/Qmafww4jD4Y68pRZVksZZVh4XcZu9noE3CDN86adyry3Gh"
+				"bzz-raw://45ab79bd29b9f75dc0e16cd1436ca590dfee4fcf6c47d3427a151a6cb37d4b85",
+				"dweb:/ipfs/QmYa2E694McqVDFdjR14jQ3SkmULyavQfB5tBfe9mZwMWn"
 			]
 		},
 		"contracts/PriceOracle.sol": {
