@@ -47,6 +47,42 @@
 						"type": "uint256"
 					},
 					{
+						"internalType": "int256",
+						"name": "collateralDecrease",
+						"type": "int256"
+					}
+				],
+				"name": "decreasePositionCollateral",
+				"outputs": [],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "uint256",
+						"name": "positionIndex",
+						"type": "uint256"
+					},
+					{
+						"internalType": "int256",
+						"name": "sizeDecrease",
+						"type": "int256"
+					}
+				],
+				"name": "decreasePositionSize",
+				"outputs": [],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "uint256",
+						"name": "positionIndex",
+						"type": "uint256"
+					},
+					{
 						"internalType": "address",
 						"name": "trader",
 						"type": "address"
@@ -367,11 +403,11 @@
 			]
 		},
 		"contracts/Perpetuals.sol": {
-			"keccak256": "0x7b005e452bb38702fe8628dad9cb56e533354dab9be945ecd325ad60627cdaeb",
+			"keccak256": "0x4a28084ee10e7662e28b25f44761055db22f36ea0185f2885ef0d1fa16d83ec8",
 			"license": "MIT",
 			"urls": [
-				"bzz-raw://45ab79bd29b9f75dc0e16cd1436ca590dfee4fcf6c47d3427a151a6cb37d4b85",
-				"dweb:/ipfs/QmYa2E694McqVDFdjR14jQ3SkmULyavQfB5tBfe9mZwMWn"
+				"bzz-raw://b60a70e6fbd8c0d4176fabf619145cc5e1a9133873e5d8a80a086846d9efa95f",
+				"dweb:/ipfs/QmcySLcyyLceEsBZbhk5Zv6XZSHNuUTNve7iMLsJZqV9Lx"
 			]
 		},
 		"contracts/PriceOracle.sol": {

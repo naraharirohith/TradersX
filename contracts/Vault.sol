@@ -38,12 +38,9 @@ contract LiquidityVault is ERC4626 {
 
     // Override previewWithdraw function to consider locked collateral
     function previewWithdraw(uint256 assets) public view override returns (uint256) {
-        uint256 availableAssets = super.previewWithdraw(assets);
         uint256 lockedAssets = lockedCollateral[msg.sender];
-        if (availableAssets > lockedAssets) {
-            return availableAssets - lockedAssets;
-        }
-        return 0;
+        uint256 actualAssets = assets <= lockedAssets ? assets : lockedAssets;
+        return super.previewWithdraw(actualAssets);
     }
 
     // Override maxWithdraw function to consider locked collateral
@@ -60,9 +57,6 @@ contract LiquidityVault is ERC4626 {
     function maxWithdraw(address owner) public view override returns (uint256) {
         uint256 maxWithdrawAmount = super.maxWithdraw(owner);
         uint256 lockedAssets = lockedCollateral[owner];
-        if (maxWithdrawAmount > lockedAssets) {
-            return maxWithdrawAmount - lockedAssets;
-        }
-        return 0;
+        return (maxWithdrawAmount < lockedAssets) ? maxWithdrawAmount : lockedAssets;
     }
 }

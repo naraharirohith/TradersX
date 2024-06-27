@@ -95,21 +95,58 @@ contract PerpetualProtocol {
         position.collateral += additionalCollateral;
     }
 
-    // function closePosition() external {
-    //     require(positions[msg.sender].isOpen, "No open position to close");
+    function decreasePositionSize(uint positionIndex, int sizeDecrease) external {
+        Position storage position = positions[msg.sender][positionIndex];
+        require(position.isOpen, "Position is not open");
+        require(position.trader == msg.sender, "Not authorized to modify this position");
+        require(sizeDecrease > 0 , "No change in size");
 
-    //     Position storage position = positions[msg.sender];
-    //     int pnl = calculatePnL(position);
+        (int currentPnl, int temp) = calculatePnL(position);
+        int realizedPnl = currentPnl * sizeDecrease / position.size;
 
-    //     // Adjust collateral based on PnL
-    //     if (pnl > 0) {
-            
-    //     } else {
-            
-    //     }
+            // Update position size and borrowed value
+        position.size -= sizeDecrease;
+        position.borrowedValue = (position.borrowedValue * position.size) / (position.size + sizeDecrease);
 
-    //     delete positions[msg.sender];
-    // }
+        // Handle realized PnL
+        if (realizedPnl > 0) {
+            // Pay profit to trader
+            vault.withdraw(uint(realizedPnl), msg.sender, address(this));
+        } else if (realizedPnl < 0) {
+            // Deduct loss from collateral
+            position.collateral += realizedPnl; // realizedPnl is negative, so this reduces collateral
+        }
+
+        // Check if position should be closed
+        if (position.size == 0) {
+            // Close position and return remaining collateral
+            uint remainingCollateral = uint(position.collateral);
+            vault.withdraw(remainingCollateral, msg.sender, address(this));
+            position.isOpen = false;
+            position.collateral = 0;
+        } else {
+            // Ensure remaining position is not liquidatable
+            require(getCurrentLeverage(positionIndex, msg.sender) <= maxLeverage, "Resulting position would be liquidatable");
+        }
+    }
+
+    function decreasePositionCollateral(uint positionIndex, int collateralDecrease) external {
+        Position storage position = positions[msg.sender][positionIndex];
+        require(position.isOpen, "Position is not open");
+        require(position.trader == msg.sender, "Not authorized to modify this position");
+        require(collateralDecrease > 0 && collateralDecrease <= position.collateral, "Invalid collateral decrease");
+
+        // Update position collateral
+        position.collateral -= collateralDecrease;
+
+        // Ensure remaining position is not liquidatable
+        require(getCurrentLeverage(positionIndex, msg.sender) <= maxLeverage, "Resulting position would be liquidatable");
+
+        // Withdraw collateral to trader
+        vault.withdraw(uint(collateralDecrease), msg.sender, address(this));
+
+        // Emit event or perform additional actions as needed
+    }
 
     function getCurrentLeverage(uint positionIndex, address trader) public view returns (uint) {
         Position storage position = positions[trader][positionIndex];
@@ -125,7 +162,7 @@ contract PerpetualProtocol {
         }
 
     return leverage;
-}
+    }
 
     function calculatePnL(Position storage position) private view returns (int, int) {
         int currentMarketValue = price.getLatestBTCPrice();
