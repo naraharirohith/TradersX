@@ -38,9 +38,9 @@ contract LiquidityVault is ERC4626 {
 
     // Override previewWithdraw function to consider locked collateral
     function previewWithdraw(uint256 assets) public view override returns (uint256) {
+        uint256 availableAssets = super.previewWithdraw(assets);
         uint256 lockedAssets = lockedCollateral[msg.sender];
-        uint256 actualAssets = assets <= lockedAssets ? assets : lockedAssets;
-        return super.previewWithdraw(actualAssets);
+        return (availableAssets < lockedAssets) ? availableAssets : lockedAssets;
     }
 
     // Override maxWithdraw function to consider locked collateral
